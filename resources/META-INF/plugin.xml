@@ -1,8 +1,8 @@
 <idea-plugin>
-    <id>site.forgus.plugins.api-generator</id>
+    <id>site.hufan.plugins.api-generator</id>
     <name>Api Generator</name>
-    <version>2021.02.18</version>
-    <vendor email="wenbin1876@gmail.com">孤峰</vendor>
+    <version>2021.02.24</version>
+    <vendor email="huzh@smartebao.com">胡凡</vendor>
 
     <description><![CDATA[
       <em>Api开发利器，接口文档自动生成</em><br><br>
@@ -42,7 +42,7 @@
       <li>支持字段过滤，自动忽略过滤字段的解析</li>
       <li>自动识别类，生成markdown文档或上传到YApi</li>
       <li>支持List、Set、Collection等数据结构，支持嵌套泛型解析</li>
-      <li>支持@NotNull、@ResponseBody等常用注解的解析，基于json5生成YApi文档</li>
+      <li>支持@NotNull、@ResponseBody等常用注解的解析，基于json5生成ShowDoc文档</li>
       </ul><br>
       用法：<br>
       <ul><li>将光标定位到方法区域或者类名，鼠标右键单击"Generate Api".</li></ul><br>
@@ -74,29 +74,32 @@
           <td>是否从javadoc抽取文件名</td>
         </tr>
         <tr>
-          <td>YApi server url</td>
-          <td>YApi部署服务器地址</td>
+          <td>showDoc server url</td>
+          <td>showdoc部署服务器地址(http://ip:port/server/index.php?s=)</td>
         </tr>
         <tr>
-          <td>Project token</td>
-          <td>项目token</td>
+          <td>api key</td>
+          <td>api_key，认证凭证。登录showdoc，进入具体项目后，点击右上角的”项目设置”-“开放API”便可看到</td>
+        </tr>
+        <tr>
+          <td>api token</td>
+          <td>同上</td>
         </tr>
         <tr>
           <td>Default save category</td>
-          <td>默认保存分类</td>
-        </tr>
-        <tr>
-          <td>Classify API automatically</td>
-          <td>是否自动分类</td>
+          <td>项目名称</td>
         </tr>
       </table><br>
       <em>Compatible IDE versions:</em><br>
       2019.1.4+ <br><br>
-      <p><a href="https://github.com/Forgus/api-generator">GitHub</a>
-      |&nbsp<a href="https://github.com/Forgus/api-generator/issues">Issues</a></p>
+      <p><a href="https://github.com/koalahufan/api-generator.git">GitHub</a></p>
     ]]></description>
 
     <change-notes><![CDATA[
+      <em>2021.02.24</em><br>
+      <ul>
+          <li>将YAPI支持修改为showDoc支持，基于孤峰项目改造，孤峰原项目地址（https://github.com/Forgus/api-generator）</li>
+      </ul>
       <em>2021.02.18</em><br>
       <ul>
           <li>第三方jar包解析bug修复。</li>
@@ -131,7 +134,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="191.0"/>
+    <idea-version since-build="192.0"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

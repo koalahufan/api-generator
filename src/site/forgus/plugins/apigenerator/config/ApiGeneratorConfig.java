@@ -20,11 +20,19 @@ public class ApiGeneratorConfig implements PersistentStateComponent<ApiGenerator
     public String prefix = "└";
     public Boolean cnFileName = false;
     public Boolean overwrite = true;
+    /**
+     * showdoc api 接口地址
+     */
+    public String showDocServerUrl = "";
+    /**
+     * 认证凭证。登录showdoc，进入具体项目后，点击右上角的”项目设置”-“开放API”便可看到
+     */
+    public String apiKey = "";
+    /**
+     * 同apiKey
+     */
+    public String apiToken = "";
 
-    public String yApiServerUrl = "";
-    public String projectToken = "";
-    public String projectId = "";
-    public Boolean autoCat = false;
     public String defaultCat = "api_generator";
 
     @Nullable

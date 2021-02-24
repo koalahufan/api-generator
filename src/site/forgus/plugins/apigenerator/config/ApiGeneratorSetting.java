@@ -15,6 +15,7 @@ import site.forgus.plugins.apigenerator.yapi.sdk.YApiSdk;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Collections;
 
 public class ApiGeneratorSetting implements Configurable {
 
@@ -26,11 +27,10 @@ public class ApiGeneratorSetting implements Configurable {
     JBCheckBox cnFileNameCheckBox;
     JBCheckBox overwriteCheckBox;
 
-    JBTextField yApiUrlTextField;
+    JBTextField showDocUrlTextField;
     JBTextField tokenTextField;
-    JBLabel projectIdLabel;
+    JBTextField keyTextField;
     JBTextField defaultCatTextField;
-    JBCheckBox autoCatCheckBox;
     JBTextField excludeFields;
 
     public ApiGeneratorSetting(Project project) {
@@ -74,30 +74,25 @@ public class ApiGeneratorSetting implements Configurable {
         jbTabbedPane.addTab("Api Setting", normalPanel);
 
         //YApi setting
-        JBPanel yApiPanel = new JBPanel(layout);
+        JBPanel showDocPanel = new JBPanel(layout);
 
-        yApiPanel.add(buildLabel(layout, "YApi server url:"));
-        yApiUrlTextField = buildTextField(layout, oldState.yApiServerUrl);
-        yApiPanel.add(yApiUrlTextField);
+        showDocPanel.add(buildLabel(layout, "showDoc server url:"));
+        showDocUrlTextField = buildTextField(layout, oldState.showDocServerUrl);
+        showDocPanel.add(showDocUrlTextField);
 
-        yApiPanel.add(buildLabel(layout, "Project token:"));
-        tokenTextField = buildTextField(layout, oldState.projectToken);
-        yApiPanel.add(tokenTextField);
+        showDocPanel.add(buildLabel(layout, "api key:"));
+        keyTextField = buildTextField(layout, oldState.apiKey);
+        showDocPanel.add(keyTextField);
 
-        yApiPanel.add(buildLabel(layout, "Project id:"));
-        GridBagConstraints textConstraints = getValueConstraints();
-        projectIdLabel = new JBLabel(oldState.projectId);
-        layout.setConstraints(projectIdLabel, textConstraints);
-        yApiPanel.add(projectIdLabel);
+        showDocPanel.add(buildLabel(layout, "api token:"));
+        tokenTextField = buildTextField(layout, oldState.apiToken);
+        showDocPanel.add(tokenTextField);
 
-        yApiPanel.add(buildLabel(layout, "Default save category:"));
+        showDocPanel.add(buildLabel(layout, "Default save category:"));
         defaultCatTextField = buildTextField(layout, oldState.defaultCat);
-        yApiPanel.add(defaultCatTextField);
+        showDocPanel.add(defaultCatTextField);
 
-        autoCatCheckBox = buildJBCheckBox(layout, "Classify API automatically", oldState.autoCat);
-        yApiPanel.add(autoCatCheckBox);
-
-        jbTabbedPane.addTab("YApi Setting", yApiPanel);
+        jbTabbedPane.addTab("ShowDoc Setting", showDocPanel);
         return jbTabbedPane;
     }
 
@@ -140,11 +135,10 @@ public class ApiGeneratorSetting implements Configurable {
         return !oldState.prefix.equals(prefixTextField.getText()) ||
                 oldState.cnFileName != cnFileNameCheckBox.isSelected() ||
                 oldState.overwrite != overwriteCheckBox.isSelected() ||
-                !oldState.yApiServerUrl.equals(yApiUrlTextField.getText()) ||
-                !oldState.projectToken.equals(tokenTextField.getText()) ||
-                !oldState.projectId.equals(projectIdLabel.getText()) ||
+                !oldState.showDocServerUrl.equals(showDocUrlTextField.getText()) ||
+                !oldState.apiKey.equals(keyTextField.getText()) ||
+                !oldState.apiToken.equals(tokenTextField.getText()) ||
                 !oldState.defaultCat.equals(defaultCatTextField.getText()) ||
-                oldState.autoCat != autoCatCheckBox.isSelected() ||
                 !oldState.dirPath.equals(dirPathTextField.getText()) ||
                 !oldState.excludeFields.equals(excludeFields.getText());
     }
@@ -154,25 +148,16 @@ public class ApiGeneratorSetting implements Configurable {
         oldState.excludeFields = excludeFields.getText();
         if (!StringUtils.isEmpty(excludeFields.getText())) {
             String[] split = excludeFields.getText().split(",");
-            for (String str : split) {
-                oldState.excludeFieldNames.add(str);
-            }
+            Collections.addAll(oldState.excludeFieldNames, split);
         }
         oldState.dirPath = dirPathTextField.getText();
         oldState.prefix = prefixTextField.getText();
         oldState.cnFileName = cnFileNameCheckBox.isSelected();
         oldState.overwrite = overwriteCheckBox.isSelected();
-        oldState.yApiServerUrl = yApiUrlTextField.getText();
-        oldState.projectToken = tokenTextField.getText();
-        if(AssertUtils.isNotEmpty(yApiUrlTextField.getText()) && AssertUtils.isNotEmpty(tokenTextField.getText())) {
-            try {
-                oldState.projectId = YApiSdk.getProjectInfo(yApiUrlTextField.getText(), tokenTextField.getText()).get_id().toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        oldState.showDocServerUrl = showDocUrlTextField.getText();
+        oldState.apiKey = keyTextField.getText();
+        oldState.apiToken = tokenTextField.getText();
         oldState.defaultCat = defaultCatTextField.getText();
-        oldState.autoCat = autoCatCheckBox.isSelected();
     }
 
 }

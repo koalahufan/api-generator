@@ -1,6 +1,5 @@
 package site.forgus.plugins.apigenerator.util;
 
-import com.google.common.base.Strings;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
@@ -29,7 +28,7 @@ public class DesUtil {
         boolean beginIndexFlag;
         boolean endIndexFlag;
         do {
-            if (Strings.isNullOrEmpty(source.trim()) || source.equals(String.valueOf(element))) {
+            if (StringUtils.isBlank(source.trim()) || source.equals(String.valueOf(element))) {
                 source = "";
                 break;
             }
@@ -40,6 +39,31 @@ public class DesUtil {
             endIndexFlag = (source.lastIndexOf(element) + 1 == source.length());
         } while (beginIndexFlag || endIndexFlag);
         return source;
+    }
+
+
+    /**
+     * 获取 @title 注释中注解的含义
+     *
+     * @param psiDocComment 文档注释
+     * @return 注释注解中 @title 的结果
+     */
+    public static String getTitle(PsiDocComment psiDocComment){
+        if (psiDocComment == null) {
+            return "其它接口（无标题注解）";
+        }
+        PsiDocTag[] tags = psiDocComment.getTags();
+        for (PsiDocTag tag : tags) {
+            String text = tag.getText();
+            if (StringUtils.isNotBlank(text) && text.contains("@title")) {
+                return text.replace("@title","").replace(" ","");
+            }
+        }
+        String description = getDescription(psiDocComment);
+        if (StringUtils.isNotBlank(description)) {
+            return description;
+        }
+        return "其它接口（无标题注解）";
     }
 
     /**
@@ -148,7 +172,7 @@ public class DesUtil {
     private static String getFiledDesc(PsiDocComment psiDocComment) {
         if (Objects.nonNull(psiDocComment)) {
             String fileText = psiDocComment.getText();
-            if (!Strings.isNullOrEmpty(fileText)) {
+            if (StringUtils.isNotBlank(fileText)) {
                 return trimFirstAndLastChar(fileText.replace("*", "").replace("/", "").replace(" ", "").replace("\n", ",").replace("\t", ""), ',').split("\\{@link")[0];
             }
         }
@@ -207,7 +231,7 @@ public class DesUtil {
                             remarkBuilder.append(":").append(value);
                         }
                         String filedValue = DesUtil.getFiledDesc(psiField.getDocComment());
-                        if (!Strings.isNullOrEmpty(filedValue)) {
+                        if (StringUtils.isNotBlank(filedValue)) {
                             remarkBuilder.append("(").append(filedValue).append(")");
                         }
                     }
