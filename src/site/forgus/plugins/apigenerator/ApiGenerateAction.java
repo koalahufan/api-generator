@@ -273,7 +273,7 @@ public class ApiGenerateAction extends AnAction {
         PsiAnnotation controller = null;
         PsiAnnotation classRequestMapping = null;
         for (PsiAnnotation annotation : containingClass.getAnnotations()) {
-            String text = annotation.getText();
+            String text = annotation.getText().split("\\(")[0];
             if (text.endsWith(WebAnnotation.Controller)) {
                 controller = annotation;
             } else if (text.contains(WebAnnotation.RequestMapping)) {
@@ -283,15 +283,14 @@ public class ApiGenerateAction extends AnAction {
         if (controller == null) {
             return null;
         }
-        MethodInfo methodInfo = new MethodInfo(psiMethod);
         PsiAnnotation methodMapping = getMethodMapping(psiMethod);
         ShowDocInterface showDocInterface = new ShowDocInterface();
         ApiGeneratorConfig state = config.getState();
         showDocInterface.setApi_key(state.apiKey);
         showDocInterface.setApi_token(state.apiToken);
         showDocInterface.setCat_name(state.defaultCat + "/" +
-                DesUtil.getTitle(psiMethod.getContainingClass().getDocComment()));
-        showDocInterface.setPage_title(DesUtil.getTitle(psiMethod.getDocComment()));
+                DesUtil.getTitle(psiMethod.getContainingClass()));
+        showDocInterface.setPage_title(DesUtil.getTitle(psiMethod));
         showDocInterface.setPage_content(generateMDString(psiMethod, classRequestMapping, methodMapping));
         return showDocInterface;
     }

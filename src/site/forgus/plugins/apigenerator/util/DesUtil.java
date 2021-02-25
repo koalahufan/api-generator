@@ -41,6 +41,62 @@ public class DesUtil {
         return source;
     }
 
+    /**
+     * 获取标题
+     *
+     * @param psiClass 选中的类
+     * @return 标题
+     */
+    public static String getTitle(PsiClass psiClass) {
+        PsiDocComment docComment = psiClass.getDocComment();
+        if (docComment == null) {
+            for (PsiAnnotation annotation : psiClass.getAnnotations()) {
+                if(annotation.getText().contains(SwaggerAnnotation.ApiOperation)) {
+                    PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
+                    if(attributes.length == 1 && attributes[0].getName() == null) {
+                        return attributes[0].getLiteralValue();
+                    }
+                    if(attributes.length >= 1) {
+                        for (PsiNameValuePair attribute : attributes) {
+                            if("value".equals(attribute.getName())) {
+                                return attribute.getLiteralValue();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return getTitle(docComment);
+    }
+
+    /**
+     * 获取标题
+     *
+     * @param psiMethod 选中的方法
+     * @return 标题
+     */
+    public static String getTitle(PsiMethod psiMethod) {
+        PsiDocComment docComment = psiMethod.getDocComment();
+        if (docComment == null) {
+            for (PsiAnnotation annotation : psiMethod.getAnnotations()) {
+                if(annotation.getText().contains(SwaggerAnnotation.ApiOperation)) {
+                    PsiNameValuePair[] attributes = annotation.getParameterList().getAttributes();
+                    if(attributes.length == 1 && attributes[0].getName() == null) {
+                        return attributes[0].getLiteralValue();
+                    }
+                    if(attributes.length >= 1) {
+                        for (PsiNameValuePair attribute : attributes) {
+                            if("value".equals(attribute.getName())) {
+                                return attribute.getLiteralValue();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return getTitle(docComment);
+    }
+
 
     /**
      * 获取 @title 注释中注解的含义
@@ -48,7 +104,7 @@ public class DesUtil {
      * @param psiDocComment 文档注释
      * @return 注释注解中 @title 的结果
      */
-    public static String getTitle(PsiDocComment psiDocComment){
+    private static String getTitle(PsiDocComment psiDocComment){
         if (psiDocComment == null) {
             return "其它接口（无标题注解）";
         }
